@@ -52,10 +52,13 @@ namespace {
             	for (Instruction &I : B){
             	    if(LoadInst* LI = dyn_cast<LoadInst>(&I)){
             	        IRBuilder<> builder(&I);
+            	        ConstantInt* zero = ConstantInt::get(M.getContext(), APInt(32, 0, false));
+            	        Value* zero_value = dyn_cast<Value>(zero);
             	        std::vector<Value*> values;
-                	        values.push_back(LI->getPointerOperand());
-                	        Value* arg1 = builder.CreateGEP(load,values);
-                	        builder.CreateCall(printfFunction, arg1);
+            	        values.push_back(zero);
+            	        values.push_back(zero);
+            	        Value* gep = builder.CreateGEP(load,values,"");
+            	        builder.CreateCall(printfFunction, gep);
                 	    
             	     
             	    } 
