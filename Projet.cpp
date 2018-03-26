@@ -21,14 +21,15 @@ namespace {
 
     virtual bool runOnModule(Module &M) 
     { 
-    
+ 	// Create printf function   
         FunctionType* printf_type = TypeBuilder<int(char*,...), false>::get(M.getContext());
         Constant* c = M.getOrInsertFunction("printf", printf_type);
         Function* printfFunction = dyn_cast<Function>(c);
         
-        // strings
+        // messages
         const char* LOAD_STR  = "I am loading address %p\n";
         const char* STORE_STR = "I am storing %ld at address %p\n";
+        
         // Create contants
         Constant* load  = ConstantDataArray::getString(M.getContext(), LOAD_STR, ".ldStr");
         Constant* store = ConstantDataArray::getString(M.getContext(), STORE_STR, ".stStr");
@@ -51,22 +52,27 @@ namespace {
             for (BasicBlock &B : F ) {
             	for (Instruction &I : B){
             	    if(LoadInst* LI = dyn_cast<LoadInst>(&I)){
+                        // Create builder
             	        IRBuilder<> builder(&I);
             	        ConstantInt* zero = ConstantInt::get(M.getContext(), APInt(32, 0, false));
-            	        Value* zero_value = dyn_cast<Value>(zero);
+            	        
+                        // Create values for GEP
+                        Value* zero_value = dyn_cast<Value>(zero);
             	        std::vector<Value*> values;
             	        values.push_back(zero);
             	        values.push_back(zero);
             	        Value* gep = builder.CreateGEP(load->getType(),gvar_load,values,"");
             	        
+                        // printf args
             	        ArrayRef<Value*> args = {gep, LI->getPointerOperand()};
+                        // Add printf call to IR
             	        builder.CreateCall(printfFunction, args);
-                	    
             	     
             	    } 
             	    
             	    if(StoreInst* SI = dyn_cast<StoreInst>(&I)){
-            	         IRBuilder<> builder(&I);
+            	        // builder & values for GEP
+                        IRBuilder<> builder(&I);
             	        ConstantInt* zero = ConstantInt::get(M.getContext(), APInt(32, 0, false));
             	        Value* zero_value = dyn_cast<Value>(zero);
             	        std::vector<Value*> values;
@@ -74,13 +80,15 @@ namespace {
             	        values.push_back(zero);
             	        Value* gep = builder.CreateGEP(store->getType(),gvar_store,values,"");
             	        
+                        // print call with arguments
             	        ArrayRef<Value*> args = {gep, SI->getValueOperand(), SI->getPointerOperand()};
             	        builder.CreateCall(printfFunction, args);     	      
             	    }
             	    
             	    if(AllocaInst* AI = dyn_cast<AllocaInst>(&I)){
-            	        outs() << "alloca" << "\n";
-            	    }
+            	       
+                          
+                    }
                   
                 }
             }
