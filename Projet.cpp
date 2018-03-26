@@ -22,7 +22,7 @@ namespace {
     virtual bool runOnModule(Module &M) 
     { 
     
-        FunctionType* printf_type = TypeBuilder<int(...), false>::get(M.getContext());
+        FunctionType* printf_type = TypeBuilder<int(char*,...), false>::get(M.getContext());
         Constant* c = M.getOrInsertFunction("printf", printf_type);
         Function* printfFunction = dyn_cast<Function>(c);
         
@@ -89,13 +89,13 @@ namespace {
 char ProjetPass::ID = 0;
 
 
-//static RegisterPass<ProjetPass> ProjetPass("projetpass", "pass");
+static RegisterPass<ProjetPass> ProjetPass("projetpass", "pass");
 
 /////////////////////////////////////////
 /// Register the pass for clang usage ///
 /////////////////////////////////////////
 // http://adriansampson.net/blog/clangpass.html 
-
+/*
 static void registerProjetPass(const PassManagerBuilder &,
 				 legacy::PassManagerBase &PM) {
   PM.add(new ProjetPass());
@@ -103,4 +103,4 @@ static void registerProjetPass(const PassManagerBuilder &,
 static RegisterStandardPasses
 RegisterMyPass(PassManagerBuilder::EP_EnabledOnOptLevel0,
 	       registerProjetPass);
-
+*/
