@@ -57,8 +57,10 @@ namespace {
             	        std::vector<Value*> values;
             	        values.push_back(zero);
             	        values.push_back(zero);
-            	        Value* gep = builder.CreateGEP(load,values,"");
-            	        builder.CreateCall(printfFunction, gep);
+            	        Value* gep = builder.CreateGEP(load->getType(),load,values,"");
+            	        
+            	        ArrayRef<Value*> args = {gep, LI->getPointerOperand()};
+            	        builder.CreateCall(printfFunction, args);
                 	    
             	     
             	    } 
@@ -87,18 +89,18 @@ namespace {
 char ProjetPass::ID = 0;
 
 
-static RegisterPass<ProjetPass> ProjetPass("projetpass", "pass");
+//static RegisterPass<ProjetPass> ProjetPass("projetpass", "pass");
 
 /////////////////////////////////////////
 /// Register the pass for clang usage ///
 /////////////////////////////////////////
 // http://adriansampson.net/blog/clangpass.html 
-/*
+
 static void registerProjetPass(const PassManagerBuilder &,
 				 legacy::PassManagerBase &PM) {
   PM.add(new ProjetPass());
 }
 static RegisterStandardPasses
 RegisterMyPass(PassManagerBuilder::EP_EnabledOnOptLevel0,
-	       registerProjetPass);*/
+	       registerProjetPass);
 
