@@ -29,24 +29,28 @@ namespace {
         // messages
         const char* LOAD_STR  = "I am loading address %p\n";
         const char* STORE_STR = "I am storing %ld at address %p\n";
+        const char* ALLOC_STR = "I am allocating %ld elements\n";
         
         // Create contants
         Constant* load  = ConstantDataArray::getString(M.getContext(), LOAD_STR, ".ldStr");
         Constant* store = ConstantDataArray::getString(M.getContext(), STORE_STR, ".stStr");
+        Constant* alloc = ConstantDataArray::getString(M.getContext(), ALLOC_STR, ".alStr");
         
         //Create ArrayTypes
         ArrayType *Ty_load  = ArrayType::get(Type::getInt8Ty(M.getContext()), strlen(LOAD_STR)+1);
         ArrayType *Ty_store = ArrayType::get(Type::getInt8Ty(M.getContext()), strlen(STORE_STR)+1);
+        ArrayType *Ty_alloc = ArrayType::get(Type::getInt8Ty(M.getContext()), strlen(ALLOC_STR)+1);
         
         // Create GlobalVar
-        GlobalVariable* gvar_load  = new GlobalVariable(M, Ty_load, true, GlobalValue::ExternalLinkage, 0, ".str");
-        GlobalVariable* gvar_store = new GlobalVariable(M, Ty_store, true, GlobalValue::ExternalLinkage, 0, ".str");
+        GlobalVariable* gvar_load  = new GlobalVariable(M, Ty_load, true, GlobalValue::ExternalLinkage, 0, ".ldStr");
+        GlobalVariable* gvar_store = new GlobalVariable(M, Ty_store, true, GlobalValue::ExternalLinkage, 0, ".stStr");
+        GlobalVariable* gvar_alloc = new GlobalVariable(M, Ty_alloc, true, GlobalValue::ExternalLinkage, 0, ".alStr");
         
        
         //set initializers
         gvar_load->setInitializer(load);
         gvar_store->setInitializer(store);
-        
+        gvar_alloc->setInitializer(alloc);
         
         for (Function & F : M){
             for (BasicBlock &B : F ) {
@@ -86,7 +90,21 @@ namespace {
             	    }
             	    
             	    if(AllocaInst* AI = dyn_cast<AllocaInst>(&I)){
-            	       
+            	       // Create builder
+            	        IRBuilder<> builder(&I);
+            	        ConstantInt* zero = ConstantInt::get(M.getContext(), APInt(32, 0, false));
+            	        
+                        // Create values for GEP
+                        Value* zero_value = dyn_cast<Value>(zero);
+            	        std::vector<Value*> values;
+            	        values.push_back(zero);
+            	        values.push_back(zero);
+            	        Value* gep = builder.CreateGEP(alloc->getType(),gvar_alloc,values,"");
+            	        
+                        // printf args
+            	        ArrayRef<Value*> args = {gep, AI->getArraySize()};
+                        // Add printf call to IR
+            	        builder.CreateCall(printfFunction, args);
                           
                     }
                   
