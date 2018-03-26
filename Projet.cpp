@@ -66,9 +66,16 @@ namespace {
             	    } 
             	    
             	    if(StoreInst* SI = dyn_cast<StoreInst>(&I)){
-            	        /*ArrayRef<Value*> args = {/*store, SI->getValueOperand(), SI->getPointerOperand()  };
-                        IRBuilder<> Builder(&I);
-                        Builder.CreateCall(printfFunction, args);  */      	      
+            	         IRBuilder<> builder(&I);
+            	        ConstantInt* zero = ConstantInt::get(M.getContext(), APInt(32, 0, false));
+            	        Value* zero_value = dyn_cast<Value>(zero);
+            	        std::vector<Value*> values;
+            	        values.push_back(zero);
+            	        values.push_back(zero);
+            	        Value* gep = builder.CreateGEP(store->getType(),gvar_store,values,"");
+            	        
+            	        ArrayRef<Value*> args = {gep, SI->getValueOperand(), SI->getPointerOperand()};
+            	        builder.CreateCall(printfFunction, args);     	      
             	    }
             	    
             	    if(AllocaInst* AI = dyn_cast<AllocaInst>(&I)){
