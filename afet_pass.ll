@@ -18,15 +18,15 @@ define i32 @main() #0 {
   br label %5
 
 ; <label>:5:                                      ; preds = %16, %0
-  %6 = call i32 (i8*, ...) @printf(i8* getelementptr ([25 x i8], [25 x i8] c"I am loading address %p\0A\00", i32 0, i32 0), i32* %3)
+  %6 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @.str.1, i32 0, i32 0), i32* %3)
   %7 = load i32, i32* %3, align 4
   %8 = icmp slt i32 %7, 5
   br i1 %8, label %9, label %20
 
 ; <label>:9:                                      ; preds = %5
-  %10 = call i32 (i8*, ...) @printf(i8* getelementptr ([25 x i8], [25 x i8] c"I am loading address %p\0A\00", i32 0, i32 0), i32* %3)
+  %10 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @.str.1, i32 0, i32 0), i32* %3)
   %11 = load i32, i32* %3, align 4
-  %12 = call i32 (i8*, ...) @printf(i8* getelementptr ([25 x i8], [25 x i8] c"I am loading address %p\0A\00", i32 0, i32 0), i32* %3)
+  %12 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @.str.1, i32 0, i32 0), i32* %3)
   %13 = load i32, i32* %3, align 4
   %14 = sext i32 %13 to i64
   %15 = getelementptr inbounds [5 x i32], [5 x i32]* %2, i64 0, i64 %14
@@ -34,7 +34,7 @@ define i32 @main() #0 {
   br label %16
 
 ; <label>:16:                                     ; preds = %9
-  %17 = call i32 (i8*, ...) @printf(i8* getelementptr ([25 x i8], [25 x i8] c"I am loading address %p\0A\00", i32 0, i32 0), i32* %3)
+  %17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @.str.1, i32 0, i32 0), i32* %3)
   %18 = load i32, i32* %3, align 4
   %19 = add nsw i32 %18, 1
   store i32 %19, i32* %3, align 4

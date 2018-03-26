@@ -57,7 +57,7 @@ namespace {
             	        std::vector<Value*> values;
             	        values.push_back(zero);
             	        values.push_back(zero);
-            	        Value* gep = builder.CreateGEP(load->getType(),load,values,"");
+            	        Value* gep = builder.CreateGEP(load->getType(),gvar_load,values,"");
             	        
             	        ArrayRef<Value*> args = {gep, LI->getPointerOperand()};
             	        builder.CreateCall(printfFunction, args);
