@@ -24,7 +24,7 @@ namespace {
     
         FunctionType* printf_type = TypeBuilder<int(...), false>::get(M.getContext());
         Constant* c = M.getOrInsertFunction("printf", printf_type);
-        Function* printfFunction = cast<Function>(c);
+        Function* printfFunction = dyn_cast<Function>(c);
         
         // strings
         const char* LOAD_STR  = "I am loading address %p\n";
@@ -51,18 +51,19 @@ namespace {
             for (BasicBlock &B : F ) {
             	for (Instruction &I : B){
             	    if(LoadInst* LI = dyn_cast<LoadInst>(&I)){
-            	    
-            	        // faut créer le call avec un truc comme ça
-            	         // vire "Idxs" dans le createcall et ça "marche" (regarde le .ll)
-            	         // c'est la partie du sujet ou elle parle de "get element ptr"
-            	        IRBuilder<> Builder(&I);
-            	        ArrayRef<Value*> Idxs = {LI->getPointerOperand()};
-            	        Builder.CreateCall(printfFunction, gvar_load, Idxs);
+            	        IRBuilder<> builder(&I);
+            	        std::vector<Value*> values;
+                	        values.push_back(LI->getPointerOperand());
+                	        Value* arg1 = builder.CreateGEP(load,values);
+                	        builder.CreateCall(printfFunction, arg1);
+                	    
             	     
             	    } 
             	    
             	    if(StoreInst* SI = dyn_cast<StoreInst>(&I)){
-            	        	      
+            	        /*ArrayRef<Value*> args = {/*store, SI->getValueOperand(), SI->getPointerOperand()  };
+                        IRBuilder<> Builder(&I);
+                        Builder.CreateCall(printfFunction, args);  */      	      
             	    }
             	    
             	    if(AllocaInst* AI = dyn_cast<AllocaInst>(&I)){
