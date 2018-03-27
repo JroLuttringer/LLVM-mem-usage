@@ -29,28 +29,28 @@ namespace {
         // messages
         const char* LOAD_STR  = "I am loading address %p\n";
         const char* STORE_STR = "I am storing %ld at address %p\n";
-        const char* ALLOC_STR = "I am allocating %ld elements\n";
+        // const char* ALLOC_STR = "I am allocating %ld elements\n";
         
         // Create contants
         Constant* load  = ConstantDataArray::getString(M.getContext(), LOAD_STR, ".ldStr");
         Constant* store = ConstantDataArray::getString(M.getContext(), STORE_STR, ".stStr");
-        Constant* alloc = ConstantDataArray::getString(M.getContext(), ALLOC_STR, ".alStr");
+        // Constant* alloc = ConstantDataArray::getString(M.getContext(), ALLOC_STR, ".alStr");
         
         //Create ArrayTypes
         ArrayType *Ty_load  = ArrayType::get(Type::getInt8Ty(M.getContext()), strlen(LOAD_STR)+1);
         ArrayType *Ty_store = ArrayType::get(Type::getInt8Ty(M.getContext()), strlen(STORE_STR)+1);
-        ArrayType *Ty_alloc = ArrayType::get(Type::getInt8Ty(M.getContext()), strlen(ALLOC_STR)+1);
+        // ArrayType *Ty_alloc = ArrayType::get(Type::getInt8Ty(M.getContext()), strlen(ALLOC_STR)+1);
         
         // Create GlobalVar
         GlobalVariable* gvar_load  = new GlobalVariable(M, Ty_load, true, GlobalValue::ExternalLinkage, 0, ".ldStr");
         GlobalVariable* gvar_store = new GlobalVariable(M, Ty_store, true, GlobalValue::ExternalLinkage, 0, ".stStr");
-        GlobalVariable* gvar_alloc = new GlobalVariable(M, Ty_alloc, true, GlobalValue::ExternalLinkage, 0, ".alStr");
+        // GlobalVariable* gvar_alloc = new GlobalVariable(M, Ty_alloc, true, GlobalValue::ExternalLinkage, 0, ".alStr");
         
        
         //set initializers
         gvar_load->setInitializer(load);
         gvar_store->setInitializer(store);
-        gvar_alloc->setInitializer(alloc);
+        // gvar_alloc->setInitializer(alloc);
         
         for (Function & F : M){
             for (BasicBlock &B : F ) {
@@ -88,6 +88,8 @@ namespace {
             	        ArrayRef<Value*> args = {gep, SI->getValueOperand(), SI->getPointerOperand()};
             	        builder.CreateCall(printfFunction, args);     	      
             	    }
+
+                    /*
             	    
             	    if(AllocaInst* AI = dyn_cast<AllocaInst>(&I)){
             	       // Create builder
@@ -107,6 +109,8 @@ namespace {
             	        builder.CreateCall(printfFunction, args);
                           
                     }
+
+                    */
                   
                 }
             }
@@ -122,13 +126,13 @@ namespace {
 char ProjetPass::ID = 0;
 
 
-static RegisterPass<ProjetPass> ProjetPass("projetpass", "pass");
+// static RegisterPass<ProjetPass> ProjetPass("projetpass", "pass");
 
 /////////////////////////////////////////
 /// Register the pass for clang usage ///
 /////////////////////////////////////////
 // http://adriansampson.net/blog/clangpass.html 
-/*
+
 static void registerProjetPass(const PassManagerBuilder &,
 				 legacy::PassManagerBase &PM) {
   PM.add(new ProjetPass());
@@ -136,4 +140,4 @@ static void registerProjetPass(const PassManagerBuilder &,
 static RegisterStandardPasses
 RegisterMyPass(PassManagerBuilder::EP_EnabledOnOptLevel0,
 	       registerProjetPass);
-*/
+

@@ -1,4 +1,4 @@
-# Install script for directory: /home/jro/tp-llvm/Projet-CA
+# Install script for directory: /home/cyrille/Documents/M1S2/Compilation/Projet-CA
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/jro/tp-llvm/Projet-CA/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/cyrille/Documents/M1S2/Compilation/Projet-CA/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
